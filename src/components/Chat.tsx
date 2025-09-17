@@ -15,7 +15,7 @@ const Chat = ({ datasetId }: ChatProps) => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [conversationId] = useState<string>(`conv_${Date.now()}`);
+  const [conversationId] = useState<string>(`conv_${Date.now()}`); // reserved for future backend threading
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -246,22 +246,47 @@ const Chat = ({ datasetId }: ChatProps) => {
     }
 
     try {
-      const response = await apiService.sendChatMessage(
-        datasetId,
-        inputMessage,
-        conversationId
-      );
-
-      if (response.success && response.data) {
-        const aiMessage: ChatMessage = {
-          id: `ai_${Date.now()}`,
-          content: response.data.message,
-          sender: 'ai',
-          timestamp: new Date(),
-          type: response.data.type,
-          data: response.data.data,
-        };
-        setMessages(prev => [...prev, aiMessage]);
+      const response = await apiService.queryBackend(inputMessage);
+      if (response.success && response.data?.response) {
+        const items = response.data.response as any[];
+        const metadata = items.find(item => item.metadata)?.metadata;
+        const created: ChatMessage[] = [];
+        for (const item of items) {
+          if (item.message) {
+            created.push({
+              id: `ai_msg_${Date.now()}_${created.length}`,
+              content: item.message,
+              sender: 'ai',
+              timestamp: new Date(),
+              type: 'text',
+              data: metadata ? { sources: metadata.source_documents } : undefined,
+            });
+          }
+          if (item.chart) {
+            // Evaluate config string into object safely
+            let config: ChartConfiguration | null = null;
+            try {
+              // eslint-disable-next-line no-new-func
+              const fn = new Function(`${item.chart}; return config;`);
+              // item.chart defines const config = {...};
+              // We need to expose a scope where 'config' is returned
+              // Wrap so that returned value is the defined config
+              // Above function returns 'config'
+              config = fn() as ChartConfiguration;
+            } catch (_) {
+              config = null;
+            }
+            created.push({
+              id: `ai_chart_${Date.now()}_${created.length}`,
+              content: 'Chart',
+              sender: 'ai',
+              timestamp: new Date(),
+              type: 'chart',
+              data: config ? { config } : undefined,
+            });
+          }
+        }
+        setMessages(prev => [...prev, ...created]);
       } else {
         const errorMessage: ChatMessage = {
           id: `error_${Date.now()}`,
@@ -350,6 +375,24 @@ const Chat = ({ datasetId }: ChatProps) => {
                       ) : (
                         <div className="chart-placeholder-small">Unsupported chart payload</div>
                       )}
+                    </div>
+                  )}
+                  {message.data && message.data.sources && (
+                    <div className="message-sources">
+                      <div className="sources-title">Source</div>
+                      <div className="sources-list">
+                        {(() => {
+                          const source = message.data.sources[0];
+                          return (
+                            <div className="source-item">
+                              {/* <div className="source-title">{source?.title || 'Document'}</div> */}
+                              <div className="source-pages">
+                                Pages {source?.pages ? Math.min(...source.pages) : '?'}-{source?.pages ? Math.max(...source.pages) : '?'}
+                              </div>
+                            </div>
+                          );
+                        })()}
+                      </div>
                     </div>
                   )}
                   {message.data && message.type === 'table' && (
@@ -446,6 +489,7 @@ function ChartRenderer({ config }: { config: ChartConfiguration }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const chartRef = useRef<Chart | null>(null);
   const isBar = config.type === 'bar';
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -471,8 +515,18 @@ function ChartRenderer({ config }: { config: ChartConfiguration }) {
   }, [config]);
 
   return (
-    <div style={{ width: '100%', maxWidth: isBar ? 800 : 420, height: isBar ? 480 : undefined }}>
+    <div style={{ width: '100%', maxWidth: isBar ? 800 : 420, height: isBar ? 480 : undefined, position: 'relative' }}>
+      <button
+        className="chart-fullscreen-btn"
+        aria-label="Fullscreen chart"
+        onClick={() => setIsOpen(true)}
+      >
+        ⤢
+      </button>
       <canvas ref={canvasRef} style={{ width: '100%', height: '100%' }} />
+      {isOpen && (
+        <FullscreenChart config={config} onClose={() => setIsOpen(false)} />)
+      }
     </div>
   );
 }
@@ -517,5 +571,42 @@ function MermaidRenderer({ diagram }: { diagram: string }) {
       style={{ width: '100%', maxWidth: 1000, height: 520, overflow: 'auto' }}
       dangerouslySetInnerHTML={{ __html: html }}
     />
+  );
+}
+
+// Centered modal for charts
+function FullscreenChart({ config, onClose }: { config: ChartConfiguration, onClose: () => void }) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const chartRef = useRef<Chart | null>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    chartRef.current = new Chart(ctx, {
+      ...config,
+      options: {
+        ...config.options,
+        responsive: true,
+        maintainAspectRatio: false,
+      },
+    });
+    return () => {
+      if (chartRef.current) chartRef.current.destroy();
+    };
+  }, [config]);
+
+  return (
+    <div className="chart-modal-overlay" role="dialog" aria-modal="true">
+      <div className="chart-modal">
+        <div className="chart-modal-header">
+          <button className="chart-close-btn" onClick={onClose} aria-label="Close">✕</button>
+        </div>
+        <div className="chart-modal-body">
+          <canvas ref={canvasRef} />
+        </div>
+      </div>
+    </div>
   );
 }

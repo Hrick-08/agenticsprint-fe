@@ -11,6 +11,27 @@ import type {
 // const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api';
 
 class ApiService {
+  private readonly CHAT_BASE_URL = 'https://86p6qcml-5000.inc1.devtunnels.ms';
+
+  async queryBackend(query: string): Promise<ApiResponse<any>> {
+    try {
+      const modifiedQuery = query.includes("in the context of Zomato")
+      ? query
+      : `${query} in the context of Zomato`;
+      const res = await fetch(`${this.CHAT_BASE_URL}/query`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: modifiedQuery })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        return { success: false, error: data?.message || 'Chat request failed' };
+      }
+      return { success: true, data };
+    } catch (error) {
+      return { success: false, error: error instanceof Error ? error.message : 'Network error' };
+    }
+  }
   // TODO: Uncomment when connecting to backend
   // private async request<T>(
   //   endpoint: string, 
