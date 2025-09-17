@@ -96,7 +96,7 @@ const DatasetPage = () => {
       />
       
       <main className="main-content">
-        <header className="dataset-header">
+        {/* <header className="dataset-header">
           <div className="dataset-info">
             <div className="dataset-icon-large">
               <span>{dataset.displayName.charAt(0).toUpperCase()}</span>
@@ -104,21 +104,9 @@ const DatasetPage = () => {
             <div className="dataset-details">
               <h1 className="dataset-title text-gradient">{dataset.displayName}</h1>
               <p className="dataset-description">{dataset.description}</p>
-              {/* <div className="dataset-meta">
-                {dataset.recordCount && (
-                  <span className="meta-item">
-                    📊 {dataset.recordCount.toLocaleString()} records
-                  </span>
-                )}
-                {dataset.lastUpdated && (
-                  <span className="meta-item">
-                    🕐 Updated: {dataset.lastUpdated}
-                  </span>
-                )}
-              </div> */}
             </div>
           </div>
-        </header>
+        </header> */}
 
         <div className="section-content">
           {renderActiveSection()}

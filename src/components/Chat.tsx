@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import type { ChartConfiguration } from 'chart.js';
 import Chart from 'chart.js/auto';
 import mermaid from 'mermaid';
+import { IconUser, IconRobot } from '@tabler/icons-react';
 import type { ChatMessage } from '../types';
 import { apiService } from '../services/api';
 import './Chat.css';
@@ -332,9 +333,9 @@ const Chat = ({ datasetId }: ChatProps) => {
             >
               <div className="message-avatar">
                 {message.sender === 'user' ? (
-                  <div className="user-avatar">👤</div>
+                  <div className="user-avatar"><IconUser size={22} /></div>
                 ) : (
-                  <div className="ai-avatar">🤖</div>
+                  <div className="ai-avatar"><IconRobot size={22} /></div>
                 )}
               </div>
               <div className="message-content">
@@ -369,7 +370,7 @@ const Chat = ({ datasetId }: ChatProps) => {
           {isLoading && (
             <div className="message ai-message">
               <div className="message-avatar">
-                <div className="ai-avatar">🤖</div>
+                <div className="ai-avatar"><IconRobot size={22} /></div>
               </div>
               <div className="message-content">
                 <div className="message-bubble typing-indicator">
