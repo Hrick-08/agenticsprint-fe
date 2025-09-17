@@ -71,7 +71,7 @@ const HomePage = () => {
       >
         <div className="hero-section">
           <h1 className="hero-title">
-            <span className="hero-text-gradient">Suggest</span>
+            <span className="hero-text-gradient">CFOx.ai</span>
           </h1>
           <p className="hero-subtitle">
             Leverage the power of AI to create beautiful data insights
@@ -107,8 +107,8 @@ const HomePage = () => {
       <section id="about" className="features-section">
         <div className="features-container">
           <div className="section-header">
-            <h2 className="section-title">
-              Why Choose <ColourfulText text="Build.PY" />?
+                <h2 className="section-title">
+                  Why Choose <ColourfulText text="CFOx.ai" />?
             </h2>
             <p className="section-subtitle">
               Transform your data into actionable insights with our cutting-edge analytics platform
@@ -135,7 +135,7 @@ const HomePage = () => {
             Ready to Transform Your <ColourfulText text="Data" />?
           </h2>
           <p className="cta-subtitle">
-            Join thousands of companies already using Build.PY to make data-driven decisions
+                Join thousands of companies already using CFOx.ai to make data-driven decisions
           </p>
           <div className="cta-actions">
             <button 

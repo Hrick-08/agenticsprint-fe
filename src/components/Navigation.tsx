@@ -18,10 +18,10 @@ const Navigation = ({
   const [isOpen, setIsOpen] = useState(false);
 
   const navigationItems: NavigationItem[] = [
-    { id: 'analytics', label: 'Analytics', icon: '📊' },
-    { id: 'dashboard', label: 'Dashboard', icon: '📈' },
-    { id: 'chat', label: 'Chat', icon: '💬' },
-    { id: 'decision-maker', label: 'Decision Maker', icon: '🎯' },
+    { id: 'analytics', label: 'Analytics', icon: '' },
+    { id: 'dashboard', label: 'Dashboard', icon: '' },
+    { id: 'chat', label: 'Chat', icon: '' },
+    { id: 'decision-maker', label: 'Decision Maker', icon: '' },
   ];
 
   const toggleNavigation = () => {
@@ -75,7 +75,7 @@ const Navigation = ({
 
         <div className="nav-footer">
           <div className="nav-info">
-            <p className="nav-info-title">Evolve Analytics</p>
+            <p className="nav-info-title">CFOx.ai</p>
             <p className="nav-info-subtitle">AI-Powered Insights</p>
           </div>
         </div>

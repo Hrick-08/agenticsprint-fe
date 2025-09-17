@@ -15,7 +15,7 @@ export const SimpleNavbar = () => {
       color: 'white'
     }}>
       <div style={{ fontSize: '24px', fontWeight: 'bold' }}>
-        Build.PY
+        CFOx.ai
       </div>
       <div style={{ display: 'flex', gap: '20px' }}>
         <button style={{ color: 'white', background: 'none', border: 'none', cursor: 'pointer' }}>

@@ -32,7 +32,7 @@ export const MinimalNavbar = () => {
           {/* Logo */}
           <div className="text-2xl font-bold text-white">
             <span className="text-cyan-400">
-              Build.PY
+              CFOx.ai
             </span>
           </div>
 

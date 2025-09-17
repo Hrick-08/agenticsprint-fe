@@ -104,7 +104,7 @@ const DatasetPage = () => {
             <div className="dataset-details">
               <h1 className="dataset-title text-gradient">{dataset.displayName}</h1>
               <p className="dataset-description">{dataset.description}</p>
-              <div className="dataset-meta">
+              {/* <div className="dataset-meta">
                 {dataset.recordCount && (
                   <span className="meta-item">
                     📊 {dataset.recordCount.toLocaleString()} records
@@ -115,7 +115,7 @@ const DatasetPage = () => {
                     🕐 Updated: {dataset.lastUpdated}
                   </span>
                 )}
-              </div>
+              </div> */}
             </div>
           </div>
         </header>

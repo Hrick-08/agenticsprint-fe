@@ -1,4 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
+import type { ChartConfiguration } from 'chart.js';
+import Chart from 'chart.js/auto';
+import mermaid from 'mermaid';
 import type { ChatMessage } from '../types';
 import { apiService } from '../services/api';
 import './Chat.css';
@@ -49,6 +52,197 @@ const Chat = ({ datasetId }: ChatProps) => {
     setMessages(prev => [...prev, userMessage]);
     setInputMessage('');
     setIsLoading(true);
+
+    // Hardcoded simulation for the provided query
+    const normalized = inputMessage.toLowerCase();
+    const isZomatoFy2024Pie =
+      normalized.includes('pie chart') &&
+      normalized.includes('zomato') &&
+      (normalized.includes('fy 2024') || normalized.includes('fy 2024-25') || normalized.includes('2024'));
+
+    if (isZomatoFy2024Pie) {
+      // Simulate thinking delay
+      setTimeout(() => {
+        const aiText: ChatMessage = {
+          id: `ai_text_${Date.now()}`,
+          content:
+            "Zomato’s shareholding pattern for FY 2024-25 shows that public investors dominate with 94.02% ownership. Institutions hold the largest share at 67.92%, while non-institutions account for 26.10%. Additionally, the Employee Benefit Trust holds 5.98% of the total shares, and promoters hold none.",
+          sender: 'ai',
+          timestamp: new Date(),
+          type: 'text',
+        };
+
+        const config: ChartConfiguration = {
+          type: 'pie',
+          data: {
+            labels: ['Institutions', 'Non-Institutions', 'Employee Benefit Trust'],
+            datasets: [
+              {
+                label: 'Zomato Shareholding Pattern FY 2024-25',
+                data: [67.92, 26.1, 5.98],
+                backgroundColor: [
+                  'rgba(54, 162, 235, 0.7)',
+                  'rgba(255, 206, 86, 0.7)',
+                  'rgba(75, 192, 192, 0.7)'
+                ],
+                borderColor: [
+                  'rgba(54, 162, 235, 1)',
+                  'rgba(255, 206, 86, 1)',
+                  'rgba(75, 192, 192, 1)'
+                ],
+                borderWidth: 1
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                display: true,
+                position: 'top'
+              },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    return `${context.label}: ${context.parsed}%`;
+                  }
+                }
+              },
+              title: {
+                display: true,
+                text: 'Zomato Shareholding Pattern as of March 31, 2025'
+              }
+            }
+          }
+        };
+
+        const aiChart: ChatMessage = {
+          id: `ai_chart_${Date.now()}`,
+          content: 'Pie chart generated from the data for FY 2024-25',
+          sender: 'ai',
+          timestamp: new Date(),
+          type: 'chart',
+          data: { config }
+        };
+
+        setMessages(prev => [...prev, aiText, aiChart]);
+        setIsLoading(false);
+      }, 6000);
+
+      return;
+    }
+
+    // Hardcoded simulation for FY23 vs FY24 sales data bar chart
+    const isSalesFy23Fy24 =
+      normalized.includes('sales data') &&
+      (normalized.includes('fy23') || normalized.includes('fy 23')) &&
+      (normalized.includes('fy24') || normalized.includes('fy 24') || normalized.includes('24'));
+
+    if (isSalesFy23Fy24) {
+      setTimeout(() => {
+        const aiText: ChatMessage = {
+          id: `ai_text_${Date.now()}`,
+          content:
+            "Zomato’s total adjusted revenue grew from INR 8,693 crore in FY23 to INR 13,545 crore in FY24, a 56% increase. Food delivery remained the largest contributor, while quick commerce nearly tripled. Hyperpure revenue more than doubled, and the going-out segment also saw healthy growth.",
+          sender: 'ai',
+          timestamp: new Date(),
+          type: 'text',
+        };
+
+        const config: ChartConfiguration = {
+          type: 'bar',
+          data: {
+            labels: ['Food Delivery', 'Quick Commerce', 'Going-out', 'B2B Supplies (Hyperpure)', 'Others'],
+            datasets: [
+              {
+                label: 'FY23 Adjusted Revenue (INR crore)',
+                data: [6147, 806, 171, 1506, 63],
+                backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+              },
+              {
+                label: 'FY24 Adjusted Revenue (INR crore)',
+                data: [7792, 2301, 258, 3172, 22],
+                backgroundColor: 'rgba(255, 99, 132, 0.7)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: true, position: 'top' },
+              title: {
+                display: true,
+                text: 'Consolidated Adjusted Revenue by Business Segment (FY23 vs FY24)'
+              }
+            },
+            scales: {
+              x: {
+                title: { display: true, text: 'Business Segment' },
+                grid: { display: false }
+              },
+              y: {
+                beginAtZero: true,
+                title: { display: true, text: 'Adjusted Revenue (INR crore)' }
+              }
+            }
+          }
+        };
+
+        const aiChart: ChatMessage = {
+          id: `ai_chart_${Date.now()}`,
+          content: 'Bar chart comparing FY23 and FY24 adjusted revenue by segment',
+          sender: 'ai',
+          timestamp: new Date(),
+          type: 'chart',
+          data: { config }
+        };
+
+        setMessages(prev => [...prev, aiText, aiChart]);
+        setIsLoading(false);
+      }, 6000);
+
+      return;
+    }
+
+    // Hardcoded simulation for Zomato board hierarchy (Mermaid.js flowchart)
+    const isBoardHierarchy =
+      normalized.includes("board") &&
+      normalized.includes("hierarchy") &&
+      normalized.includes("zomato");
+
+    if (isBoardHierarchy) {
+      setTimeout(() => {
+        const aiText: ChatMessage = {
+          id: `ai_text_${Date.now()}`,
+          content:
+            "Zomato Limited’s Board of Directors is led by Founder & CEO Deepinder Goyal. The board also includes Sanjiv Bikhchandani as a Non-Executive Director, and independent directors Kaushik Dutta, Aparna Popat, and Sutapa Banerjee. This structure ensures balanced governance with executive, non-executive, and independent oversight.",
+          sender: 'ai',
+          timestamp: new Date(),
+          type: 'text',
+        };
+
+        const diagram = `flowchart TB\n    A[Zomato Limited - Board of Directors]\n    \n    A --> B[Deepinder Goyal<br>Founder & CEO]\n    A --> C[Sanjiv Bikhchandani<br>Non-Executive Director]\n    A --> D[Kaushik Dutta<br>Independent Director]\n    A --> E[Aparna Popat<br>Independent Director]\n    A --> F[Sutapa Banerjee<br>Independent Director]`;
+
+        const aiDiagram: ChatMessage = {
+          id: `ai_mermaid_${Date.now()}`,
+          content: 'Board hierarchy diagram',
+          sender: 'ai',
+          timestamp: new Date(),
+          type: 'chart',
+          data: { mermaid: diagram }
+        };
+
+        setMessages(prev => [...prev, aiText, aiDiagram]);
+        setIsLoading(false);
+      }, 6000);
+
+      return;
+    }
 
     try {
       const response = await apiService.sendChatMessage(
@@ -148,9 +342,13 @@ const Chat = ({ datasetId }: ChatProps) => {
                   <div className="message-text">{message.content}</div>
                   {message.data && message.type === 'chart' && (
                     <div className="message-chart">
-                      <div className="chart-placeholder-small">
-                        📊 Chart visualization would appear here
-                      </div>
+                      {message.data.config ? (
+                        <ChartRenderer config={message.data.config as ChartConfiguration} />
+                      ) : message.data.mermaid ? (
+                        <MermaidRenderer diagram={message.data.mermaid as string} />
+                      ) : (
+                        <div className="chart-placeholder-small">Unsupported chart payload</div>
+                      )}
                     </div>
                   )}
                   {message.data && message.type === 'table' && (
@@ -241,3 +439,82 @@ const Chat = ({ datasetId }: ChatProps) => {
 };
 
 export default Chat;
+
+// Lightweight renderer for Chart.js configs inside chat messages
+function ChartRenderer({ config }: { config: ChartConfiguration }) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const chartRef = useRef<Chart | null>(null);
+  const isBar = config.type === 'bar';
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    // Cleanup any previous instance
+    if (chartRef.current) {
+      chartRef.current.destroy();
+      chartRef.current = null;
+    }
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    chartRef.current = new Chart(ctx, config);
+
+    return () => {
+      if (chartRef.current) {
+        chartRef.current.destroy();
+        chartRef.current = null;
+      }
+    };
+  }, [config]);
+
+  return (
+    <div style={{ width: '100%', maxWidth: isBar ? 800 : 420, height: isBar ? 480 : undefined }}>
+      <canvas ref={canvasRef} style={{ width: '100%', height: '100%' }} />
+    </div>
+  );
+}
+
+// Mermaid renderer for flowcharts/diagrams
+function MermaidRenderer({ diagram }: { diagram: string }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [html, setHtml] = useState<string>('');
+
+  useEffect(() => {
+    let isMounted = true;
+    mermaid.initialize({ startOnLoad: false, theme: 'dark', securityLevel: 'loose' as any });
+    const id = `mermaid-${Math.random().toString(36).slice(2)}`;
+    mermaid
+      .render(id, diagram)
+      .then(({ svg }) => {
+        if (isMounted) setHtml(svg);
+      })
+      .catch(() => {
+        if (isMounted) setHtml('<div style="color: var(--text-muted)">Failed to render diagram</div>');
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, [diagram]);
+
+  useEffect(() => {
+    const node = containerRef.current;
+    if (!node) return;
+    const svg = node.querySelector('svg') as SVGElement | null;
+    if (!svg) return;
+    svg.setAttribute('width', '100%');
+    svg.setAttribute('height', '100%');
+    (svg.style as any).width = '100%';
+    (svg.style as any).height = '100%';
+    svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+  }, [html]);
+
+  return (
+    <div
+      ref={containerRef}
+      style={{ width: '100%', maxWidth: 1000, height: 520, overflow: 'auto' }}
+      dangerouslySetInnerHTML={{ __html: html }}
+    />
+  );
+}

@@ -127,7 +127,7 @@ const LandingPage = () => {
 
         <footer className="landing-footer">
           <div className="footer-content">
-            <p>&copy; 2024 Evolve Analytics. Powered by AI.</p>
+            <p>&copy; 2024 CFOx.ai. Powered by AI.</p>
           </div>
         </footer>
       </div>
