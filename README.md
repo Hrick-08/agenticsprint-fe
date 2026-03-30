@@ -23,8 +23,11 @@
 
 </div>
 
----
+# CFOx.ai
 
+**CFOx.ai** is an AI-powered financial intelligence platform designed to act as a virtual CFO. It helps individuals, startups, and small teams make smarter financial decisions using automation, analytics, and natural language interaction.
+
+---
 
 ## 🚀 Features
 
@@ -56,6 +59,26 @@
 * Database: PostgreSQL / MongoDB
 * Authentication: OAuth / Google Login
 * Hosting: Cloud deployment
+
+---
+
+## 📦 Installation (Development)
+
+```bash
+git clone https://github.com/Hrick-08/agenticsprint-fe.git
+cd agenticsprint-fe
+npm install
+npm run dev
+```
+
+Backend:
+
+```bash
+git clone https://github.com/Hrick-08/AgenticSprint_backend.git
+cd AgenticSprint_backend
+pip install -r requirements.txt
+uvicorn main:app --reload
+```
 
 ---
 
@@ -97,7 +120,6 @@ CFOx.ai is designed with:
 Contributions are welcome. Open an issue or submit a pull request.
 
 ---
-
 
 ## 🌐 Vision
 
