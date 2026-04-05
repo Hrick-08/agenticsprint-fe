@@ -23,8 +23,6 @@
 
 </div>
 
-# CFOx.ai
-
 **CFOx.ai** is an AI-powered financial intelligence platform designed to act as a virtual CFO. It helps individuals, startups, and small teams make smarter financial decisions using automation, analytics, and natural language interaction.
 
 ---
